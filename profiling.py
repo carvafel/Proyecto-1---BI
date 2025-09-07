@@ -5,8 +5,6 @@ from ydata_profiling import ProfileReport
 df = pd.read_excel("Datos_proyecto.xlsx")
 
 # 2. Generar reporte
-profile = ProfileReport(df, 
-                        title="EDA proyecto – Entrenamiento", 
-                        explorative=True)
+profile = ProfileReport(df, title="EDA proyecto – Entrenamiento", explorative=True)
 
 profile.to_file("eda_proyecto.html")
