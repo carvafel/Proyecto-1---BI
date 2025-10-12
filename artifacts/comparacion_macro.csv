@@ -1,0 +1,5 @@
+Métrica,Antes (baseline),Después (aumentado),Mejora absoluta
+PRECISION,0.8383,1.0,0.1617
+RECALL,0.8061,1.0,0.1939
+F1,0.815,1.0,0.185
+ACCURACY,0.8283,1.0,0.1717
