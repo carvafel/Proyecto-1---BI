@@ -1,0 +1,21 @@
+# Entornos y secretos
+#.env
+#.env.*
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Archivos temporales
+*.pyc
+__pycache__/
+
+# Datos y artefactos (si no deseas versionarlos)
+artifacts/
+*.pkl
+*.joblib
+*.csv
+*.xlsx
+*.html
+*.png
+
