@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    image: ods-api:0.1.2
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # opcional: montar artefactos/datos para no reconstruir la imagen
+    # volumes:
+    #   - ./artifacts:/app/artifacts
+    #   - ./data:/app/data
