@@ -1,6 +1,6 @@
 # Entornos y secretos
-#.env
-#.env.*
+.env
+.env.*
 
 # Jupyter notebooks
 .ipynb_checkpoints/
