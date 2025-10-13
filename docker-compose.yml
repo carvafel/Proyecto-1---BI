@@ -4,6 +4,7 @@ services:
     image: ods-api:0.1.2
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     ports:
       - "8000:8000"
     healthcheck:
@@ -12,6 +13,6 @@ services:
       timeout: 5s
       retries: 3
     # opcional: montar artefactos/datos para no reconstruir la imagen
-    # volumes:
-    #   - ./artifacts:/app/artifacts
-    #   - ./data:/app/data
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data

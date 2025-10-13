@@ -1,7 +1,6 @@
 # Entornos y secretos
 #.env
 #.env.*
-
 # Jupyter notebooks
 .ipynb_checkpoints/
 */.ipynb_checkpoints/
@@ -16,6 +15,5 @@ artifacts/
 *.joblib
 *.csv
 *.xlsx
-*.html
 *.png
 

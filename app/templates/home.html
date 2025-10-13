@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">Predicción rápida</h1>
+
+  <form method="post" action="/ui/predict" class="bg-white p-4 rounded shadow mb-6">
+    <label class="block text-sm font-medium mb-2">Texto</label>
+    <textarea name="texto_single" rows="4" class="w-full border rounded p-2" placeholder="Escribe un texto..."></textarea>
+    <button type="submit" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded">Clasificar</button>
+  </form>
+
+  {% if error %}
+    <div class="bg-red-100 text-red-800 p-3 rounded mb-4">{{ error }}</div>
+  {% endif %}
+
+  {% if results %}
+    <div class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="font-semibold mb-2">Resultado</h2>
+      {% set r = results[0] %}
+      <p class="mb-2"><span class="font-medium">Predicción:</span> {{ r.prediccion }}</p>
+      {% if r.probabilidades %}
+        <table class="min-w-full text-sm">
+          <thead><tr><th class="text-left p-2">Clase</th><th class="text-left p-2">Probabilidad</th></tr></thead>
+          <tbody>
+            {% for c, p in r.probabilidades.items() %}
+              <tr class="border-t"><td class="p-2">{{ c }}</td><td class="p-2">{{ '%.3f'|format(p) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <h2 class="text-xl font-bold mb-3">Predicción por lote (CSV/XLSX)</h2>
+  <form method="post" action="/ui/predict-batch" enctype="multipart/form-data" class="bg-white p-4 rounded shadow">
+    <p class="text-sm text-gray-600 mb-2">El archivo debe tener la columna <code>textos</code>.</p>
+    <input type="file" name="file" accept=".csv,.xlsx,.xls" class="border rounded p-2" required>
+    <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded">Procesar</button>
+  </form>
+
+  {% if batch_table %}
+    <div class="bg-white p-4 rounded shadow mt-6 overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr>
+            {% for col in batch_table[0].keys() %}
+              <th class="text-left p-2">{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in batch_table %}
+            <tr class="border-t">
+              {% for v in row.values() %}
+                <td class="p-2">{{ v }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+

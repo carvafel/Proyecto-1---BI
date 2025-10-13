@@ -5,3 +5,7 @@ pandas
 numpy
 joblib
 python-dotenv
+jinja2
+python-multipart
+openpyxl
+itsdangerous

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1 class="text-2xl font-bold mb-4">Panel admin</h1>
+
+  {% if message %}
+    <div class="bg-green-100 text-green-800 p-3 rounded mb-4">{{ message }}</div>
+  {% endif %}
+
+  <div class="grid md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded shadow p-4">
+      <div class="text-sm text-gray-500">Modelo</div>
+      <div class="font-semibold">{{ health.model_path }}</div>
+    </div>
+    <div class="bg-white rounded shadow p-4">
+      <div class="text-sm text-gray-500">Clases</div>
+      <div class="font-semibold">{{ health.classes|join(', ') }}</div>
+    </div>
+    <div class="bg-white rounded shadow p-4">
+      <div class="text-sm text-gray-500">Columnas</div>
+      <div class="font-semibold">{{ health.text_col }} / {{ health.label_col }}</div>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <section class="bg-white rounded shadow p-4">
+      <h2 class="font-semibold mb-3">Re‑entrenar (línea a línea)</h2>
+      <form method="post" action="/admin/retrain-line">
+        <label class="block text-sm font-medium mb-2">Texto</label>
+        <textarea name="texto" rows="3" class="w-full border rounded p-2" required></textarea>
+        <label class="block text-sm font-medium mt-3 mb-2">Etiqueta (1, 3 o 4)</label>
+        <select name="label" class="border rounded p-2">
+          <option value="1">1</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+        <button class="ml-2 px-4 py-2 bg-blue-600 text-white rounded">Re‑entrenar</button>
+      </form>
+    </section>
+
+    <section class="bg-white rounded shadow p-4">
+      <h2 class="font-semibold mb-3">Re‑entrenar por lote (CSV/XLSX)</h2>
+      <form method="post" action="/admin/retrain-batch" enctype="multipart/form-data">
+        <p class="text-sm text-gray-600 mb-2">Archivo con columnas <code>textos</code> y <code>labels</code>.</p>
+        <input type="file" name="file" accept=".csv,.xlsx,.xls" class="border rounded p-2" required>
+        <button class="ml-2 px-4 py-2 bg-blue-600 text-white rounded">Re‑entrenar</button>
+      </form>
+    </section>
+  </div>
+
+  <section class="bg-white rounded shadow p-4 mt-6">
+    <h2 class="font-semibold mb-3">Métricas y distribución</h2>
+    {% if saved_metrics %}
+      <div class="mb-3">
+        <div>Accuracy: {{ '%.3f'|format(saved_metrics.macro.accuracy) if saved_metrics.macro and saved_metrics.macro.accuracy is not none else '-' }}</div>
+        <div>F1 Macro: {{ '%.3f'|format(saved_metrics.macro.f1) if saved_metrics.macro and saved_metrics.macro.f1 is not none else '-' }}</div>
+        <div>Precision Macro: {{ '%.3f'|format(saved_metrics.macro.precision) if saved_metrics.macro and saved_metrics.macro.precision is not none else '-' }}</div>
+        <div>Recall Macro: {{ '%.3f'|format(saved_metrics.macro.recall) if saved_metrics.macro and saved_metrics.macro.recall is not none else '-' }}</div>
+      </div>
+    {% else %}
+      <div class="text-sm text-gray-600">No hay métricas guardadas disponibles.</div>
+    {% endif %}
+
+    {% if dist %}
+      <table class="min-w-full text-sm mt-3">
+        <thead><tr><th class="text-left p-2">Clase</th><th class="text-left p-2">Conteo</th></tr></thead>
+        <tbody>
+          {% for c, n in dist.items() %}
+            <tr class="border-t"><td class="p-2">{{ c }}</td><td class="p-2">{{ n }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </section>
+
+{% endblock %}
+
+
