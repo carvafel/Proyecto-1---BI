@@ -274,10 +274,12 @@ def admin_retrain_line(request: Request, texto: str = Form(""), label: str = For
         metrics = evaluate(model, df_train)
         dist = df_train[LABEL_COL].astype(str).value_counts().sort_index().to_dict()
         message = "Reentrenamiento completado con 1 ejemplo"
+        template_metrics = {"macro": metrics}
     except Exception as e:
         metrics = None
         dist = {}
         message = f"Error al reentrenar: {e}"
+        template_metrics = None
 
     health = {
         "classes": list(map(str, getattr(model, "classes_", []))),
@@ -285,7 +287,7 @@ def admin_retrain_line(request: Request, texto: str = Form(""), label: str = For
         "text_col": TEXT_COL,
         "label_col": LABEL_COL,
     }
-    return templates.TemplateResponse("admin_panel.html", {"request": request, "health": health, "saved_metrics": metrics, "dist": dist, "message": message})
+    return templates.TemplateResponse("admin_panel.html", {"request": request, "health": health, "saved_metrics": template_metrics, "dist": dist, "message": message})
 
 
 @app.post("/admin/retrain-batch", response_class=HTMLResponse)
@@ -328,10 +330,12 @@ def admin_retrain_batch(request: Request, file: UploadFile = File(...)):
         metrics = evaluate(model, df_train)
         dist = df_train[LABEL_COL].astype(str).value_counts().sort_index().to_dict()
         message = f"Reentrenamiento completado con {len(df_new)} ejemplos"
+        template_metrics = {"macro": metrics}
     except Exception as e:
         metrics = None
         dist = {}
         message = f"Error al reentrenar: {e}"
+        template_metrics = None
 
     health = {
         "classes": list(map(str, getattr(model, "classes_", []))),
@@ -339,4 +343,4 @@ def admin_retrain_batch(request: Request, file: UploadFile = File(...)):
         "text_col": TEXT_COL,
         "label_col": LABEL_COL,
     }
-    return templates.TemplateResponse("admin_panel.html", {"request": request, "health": health, "saved_metrics": metrics, "dist": dist, "message": message})
+    return templates.TemplateResponse("admin_panel.html", {"request": request, "health": health, "saved_metrics": template_metrics, "dist": dist, "message": message})
